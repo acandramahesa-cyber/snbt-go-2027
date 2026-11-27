@@ -120,3 +120,4 @@ for (const [folder, px] of densities) {
 }
 
 console.log('[OK] Warna status bar (#DC2626) & ikon launcher Android selesai dikonfigurasi.');
+try { require("fs").unlinkSync("android/app/src/main/res/values/ic_launcher_background.xml"); } catch (e) {}
