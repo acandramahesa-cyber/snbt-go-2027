@@ -1,0 +1,56 @@
+name: Build Android APK (SNBT GO 2027)
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Java 17 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install Capacitor dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Prepare offline web bundle (www/)
+        run: npm run prepare:www
+
+      - name: Initialize & sync Capacitor Android project
+        run: |
+          if [ ! -d "android" ]; then
+            npx cap add android
+          fi
+          npx cap sync android
+          node scripts/configure-android.js
+
+      - name: Build installable APK (Debug-signed)
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Rename output APK
+        run: |
+          cp android/app/build/outputs/apk/debug/app-debug.apk SNBT-GO-2027-RealmeC30.apk
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SNBT-GO-2027-APK
+          path: SNBT-GO-2027-RealmeC30.apk
+          retention-days: 30
