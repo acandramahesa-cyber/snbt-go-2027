@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#DC2626">
+  <meta name="description" content="Aplikasi Belajar SNBT 2027 Target STEI-R ITB — Gaya GO Expert Ringan & Offline-First">
+  <title>SNBT GO 2027 // Adam Candra Mahesa</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <!-- HEADER TIMER AKTIF JADWAL BELAJAR OTOMATIS (Sticky saat mode berjalan) -->
+    <aside id="scheduled-active-header" class="scheduled-active-header hidden" aria-live="polite">
+      <div class="sch-hdr-top">
+        <div class="sch-hdr-left">
+          <span class="sch-live-pill">⏱ BELAJAR TERJADWAL AKTIF</span>
+          <div class="sch-hdr-info" id="sch-active-block-info">Blok 1/7: PK (07:00–08:00) • Soal 0/10</div>
+          <div class="sch-hdr-next" id="sch-active-next-info">Berikutnya: PPU • 10 Soal</div>
+        </div>
+        <div class="sch-hdr-clock-wrap">
+          <div class="sch-hdr-clock" id="sch-active-timer">60:00</div>
+          <div class="sch-hdr-controls">
+            <button type="button" class="btn-chip" id="btn-sch-pause">⏸ Jeda</button>
+            <button type="button" class="btn-chip active-gold" id="btn-sch-next-block">⏭ Lanjut Blok</button>
+            <button type="button" class="btn-chip btn-danger-soft" id="btn-sch-stop">Stop</button>
+          </div>
+        </div>
+      </div>
+      <div class="progress-track sch-hdr-track">
+        <div class="progress-fill-amber" id="sch-active-bar-fill" style="width: 0%"></div>
+      </div>
+      <div id="sch-early-finish-note" class="sch-early-note hidden">
+        ✓ Target soal blok ini selesai! Pelajari pembahasan sambil menunggu timer habis, atau klik <strong>Lanjut Blok</strong>.
+      </div>
+    </aside>
+
+    <!-- ===================================================================
+         VIEW 1: HOME (DASHBOARD UTAMA A -> E)
+         =================================================================== -->
+    <main id="view-home" class="app-view active">
+      <!-- A. HEADER PROFIL & TARGET KAMPUS -->
+      <section class="hero-header">
+        <div class="hero-top-row">
+          <div class="hero-profile">
+            <div class="hero-avatar" aria-hidden="true">AC</div>
+            <div>
+              <h1 class="hero-greeting" id="hero-greeting">Halo, Adam Candra Mahesa</h1>
+              <div class="hero-badges">
+                <span class="badge-status">Pejuang SNBT 2027 &bull; Gap Year</span>
+                <span class="badge-streak" id="hero-streak-pill">0 Hari Streak</span>
+              </div>
+            </div>
+          </div>
+          <div class="hero-actions">
+            <button type="button" class="btn-header-pill" id="btn-manual-log">+ Log Jam</button>
+            <button type="button" class="btn-header-icon" id="btn-settings" aria-label="Pengaturan &amp; Backup" title="Pengaturan &amp; Backup">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- White Capsule Target Banner + Live Countdown & Daily Study Bar -->
+        <div class="target-capsule">
+          <div class="capsule-top">
+            <div class="capsule-goal">
+              <span class="goal-icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                </svg>
+              </span>
+              <div>
+                <div class="goal-label">Target Impian Kuliah: <strong>STEI-R ITB</strong></div>
+                <div class="goal-sub" id="hero-countdown-sub">-- minggu lagi menuju SNBT 2027</div>
+              </div>
+            </div>
+            <div class="countdown-pill" id="hero-countdown-pill">H--- UTBK</div>
+          </div>
+
+          <div class="capsule-daily">
+            <div class="daily-head">
+              <span class="daily-label">Target Belajar Harian: <strong id="daily-hours-big">0j 00m / 6–8 Jam</strong></span>
+              <span class="daily-pct-badge" id="daily-percent">0%</span>
+            </div>
+            <div class="progress-track daily-track">
+              <div class="progress-fill-amber" id="daily-progress-fill" style="width: 0%"></div>
+              <div class="daily-min-marker" id="daily-min-marker" title="Target Minimal"></div>
+            </div>
+            <div class="daily-foot" id="daily-split-meta">Berat 0m &bull; Ringan 0m &bull; 0 sesi Pomodoro</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESPONSIVE BENTO GRID FOR DESKTOP 1080p & STACKED FOR MOBILE -->
+      <div class="dashboard-grid">
+        <!-- B. KARTU CAPAIAN SKOR & TOTAL PENGERJAAN SOAL -->
+        <section class="go-card">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Capaian Skor &amp; Pengerjaan Soal</h2>
+              <p class="card-sub">Pantau volume latihan &amp; akurasi keseluruhan</p>
+            </div>
+            <button type="button" class="btn-go-red" id="btn-open-practice-modal">+ Catat Latihan Soal</button>
+          </div>
+
+          <div class="metric-block">
+            <div class="metric-row">
+              <span class="metric-label">Total Soal Dikerjakan</span>
+              <span class="metric-val" id="score-total-text">0 / 12.000 Soal</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill-red" id="score-total-bar" style="width: 0%"></div>
+            </div>
+            <div class="metric-foot">
+              <span>Target jangka panjang SNBT 2027</span>
+              <strong id="score-total-pct">0.0%</strong>
+            </div>
+          </div>
+
+          <div class="metric-block">
+            <div class="metric-row">
+              <span class="metric-label">Akurasi Keseluruhan (Benar vs Salah)</span>
+            </div>
+            <div class="split-bar-track">
+              <div class="split-bar-green" id="acc-bar-correct" style="width: 50%"></div>
+              <div class="split-bar-red" id="acc-bar-wrong" style="width: 50%"></div>
+            </div>
+            <div class="split-labels">
+              <span class="txt-green" id="acc-correct-text">Benar: 0 (0%)</span>
+              <span class="txt-red" id="acc-wrong-text">Salah: 0 (0%)</span>
+            </div>
+            <div class="muted hidden" id="acc-empty-note" style="margin-top:4px;">Belum ada data soal tercatat. Mulai Mini-Quiz atau klik "+ Catat Latihan Soal".</div>
+          </div>
+        </section>
+
+        <!-- C. KARTU SUBTES YANG DIKERJAKAN -->
+        <section class="go-card">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Subtes yang Dikerjakan</h2>
+              <p class="card-sub">Klik subtes untuk langsung berlatih</p>
+            </div>
+            <select id="subtes-period-filter" class="go-select-sm" aria-label="Filter Waktu Subtes">
+              <option value="daily">Harian</option>
+              <option value="weekly">Mingguan</option>
+              <option value="all">Semua</option>
+            </select>
+          </div>
+
+          <div id="subtes-list" class="subtes-list"></div>
+
+          <button type="button" class="btn-expand" id="btn-subtes-expand">Lihat Semua (7)</button>
+        </section>
+
+        <!-- D. KARTU GRAFIK PROGRESS BELAJAR MINGGUAN (SVG) -->
+        <section class="go-card">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Progress Belajar Mingguan</h2>
+              <p class="card-sub">Rekap pengerjaan soal Minggu s.d. Sabtu</p>
+            </div>
+          </div>
+
+          <div class="svg-chart-wrap">
+            <svg id="weekly-curve-svg" viewBox="0 0 420 190" role="img" aria-label="Grafik Kurva Progress Belajar Mingguan"></svg>
+          </div>
+
+          <div class="chart-legend">
+            <span class="legend-item"><span class="dot-yellow"></span> <span id="legend-target-val">Target Harian (50 soal)</span></span>
+            <span class="legend-item"><span class="dot-red"></span> Pengerjaan Soal</span>
+            <span class="legend-item"><span class="dot-green"></span> Jumlah Benar</span>
+          </div>
+        </section>
+
+        <!-- E. LACI MENU IKONIK BERGAYA GO (#FDE047) -->
+        <section class="go-drawer">
+          <div class="drawer-head">
+            <h2 class="drawer-main-title">Menu Utama Persiapan UTBK</h2>
+            <span class="drawer-chip">GO STYLE</span>
+          </div>
+
+          <!-- BELAJAR -->
+          <div class="drawer-section">
+            <h3 class="drawer-cat-title">BELAJAR</h3>
+            <div class="drawer-grid">
+              <button type="button" class="drawer-tile" data-view="pomodoro">
+                <span class="tile-icon bg-orange">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 3h6"/>
+                  </svg>
+                </span>
+                <span class="tile-name">Pomodoro 25/5</span>
+                <span class="tile-sub" id="drawer-pomo-status">25/5m</span>
+              </button>
+
+              <button type="button" class="drawer-tile" data-view="formulas">
+                <span class="tile-icon bg-blue">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                  </svg>
+                </span>
+                <span class="tile-name">Carousel Rumus</span>
+                <span class="tile-sub" id="drawer-formula-count">16 kartu</span>
+              </button>
+
+              <button type="button" class="drawer-tile" data-view="schedule">
+                <span class="tile-icon bg-teal">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+                  </svg>
+                </span>
+                <span class="tile-name">Jadwal &amp; Rencana</span>
+                <span class="tile-sub" id="drawer-schedule-sub">Auto-Shift • 6–8 jam</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- BERLATIH -->
+          <div class="drawer-section">
+            <h3 class="drawer-cat-title">BERLATIH</h3>
+            <div class="drawer-grid">
+              <button type="button" class="drawer-tile" data-view="quiz">
+                <span class="tile-icon bg-red">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                  </svg>
+                </span>
+                <span class="tile-name">Latihan Subtes</span>
+                <span class="tile-sub">Pace UTBK</span>
+              </button>
+
+              <button type="button" class="drawer-tile" data-view="errorlog">
+                <span class="tile-icon bg-purple">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                  </svg>
+                </span>
+                <span class="tile-name">Error Log</span>
+                <span class="tile-sub" id="drawer-error-count">0 pending</span>
+              </button>
+
+              <button type="button" class="drawer-tile" data-view="speeddrill">
+                <span class="tile-icon bg-green">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                  </svg>
+                </span>
+                <span class="tile-name">Hitung Cepat</span>
+                <span class="tile-sub">Pauli / Kuantitatif</span>
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- ===================================================================
+         VIEW 2: LATIHAN HUB
+         =================================================================== -->
+    <section id="view-latihan" class="app-view">
+      <div class="subview-header">
+        <button type="button" class="btn-back" data-view="home">&larr; Home</button>
+        <h2>Pusat Latihan &amp; Evaluasi</h2>
+      </div>
+
+      <div class="hub-grid">
+        <button type="button" class="go-card hub-card" data-view="quiz">
+          <span class="tile-icon bg-red">Q</span>
+          <div>
+            <h3>Latihan Soal Subtes (Mini-Quiz)</h3>
+            <p class="card-sub">Drill berbatas waktu (pace resmi UTBK 45–90 dtk/soal) + pembahasan singkat.</p>
+          </div>
+        </button>
+
+        <button type="button" class="go-card hub-card" data-view="speeddrill">
+          <span class="tile-icon bg-green">⚡</span>
+          <div>
+            <h3>Hitung Cepat (Pauli / Kuantitatif)</h3>
+            <p class="card-sub">Latih kecepatan berhitung &amp; ketelitian 60 detik untuk menaklukkan PK &amp; PM.</p>
+          </div>
+        </button>
+
+        <button type="button" class="go-card hub-card" data-view="errorlog">
+          <span class="tile-icon bg-purple">!</span>
+          <div>
+            <h3>Error Log &amp; Review Ulang</h3>
+            <p class="card-sub">Bank soal salah lengkap dengan kategori subtes &amp; penyebab kesalahan.</p>
+          </div>
+        </button>
+
+        <button type="button" class="go-card hub-card" id="btn-latihan-log-manual">
+          <span class="tile-icon bg-orange">+</span>
+          <div>
+            <h3>Catat Hasil Tryout / Latihan Luar</h3>
+            <p class="card-sub">Input jumlah soal, benar, dan salah dari TO offline atau PDF agar statistik lengkap.</p>
+          </div>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         VIEW 3: STATISTIK DETAIL
+         =================================================================== -->
+    <section id="view-stats" class="app-view">
+      <div class="subview-header">
+        <button type="button" class="btn-back" data-view="home">&larr; Home</button>
+        <h2>Statistik &amp; Riwayat Belajar</h2>
+      </div>
+
+      <div class="go-card">
+        <h3 class="card-title">Ringkasan Performa Keseluruhan</h3>
+        <div class="stats-kpi-row">
+          <div class="kpi-pill">
+            <span class="muted">Total Pengerjaan</span>
+            <strong id="stats-total-questions">0 soal</strong>
+          </div>
+          <div class="kpi-pill">
+            <span class="muted">Akurasi Total</span>
+            <strong id="stats-accuracy-overall">0%</strong>
+          </div>
+          <div class="kpi-pill">
+            <span class="muted">Status Error Log</span>
+            <strong id="stats-error-summary">-</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="go-card">
+        <h3 class="card-title">Kurva Mingguan (Min–Sab)</h3>
+        <div class="svg-chart-wrap">
+          <svg id="stats-curve-svg" viewBox="0 0 420 190" role="img" aria-label="Kurva Statistik Mingguan"></svg>
+        </div>
+      </div>
+
+      <div class="go-card">
+        <h3 class="card-title">Jam Belajar Mingguan (Target 6–8 Jam)</h3>
+        <div class="weekly-bars" id="stats-hours-chart"></div>
+      </div>
+
+      <div class="go-card">
+        <h3 class="card-title">Riwayat Pengerjaan Soal Terakhir</h3>
+        <div id="stats-practice-history" class="history-list"></div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         VIEW 4: SMART POMODORO 25/5 + SUBJECT ROTATOR
+         =================================================================== -->
+    <section id="view-pomodoro" class="app-view">
+      <div class="subview-header">
+        <button type="button" class="btn-back" data-view="home">&larr; Home</button>
+        <h2>Smart Pomodoro 25/5</h2>
+      </div>
+
+      <div class="go-card pomo-card">
+        <div class="card-head">
+          <span class="card-tag" id="pomo-phase-badge">FOKUS POMODORO // 25:00</span>
+          <button type="button" class="btn-chip" id="btn-pomo-mute">Suara: ON</button>
+        </div>
+
+        <div class="pomo-subject-bar">
+          <label for="pomo-subject-select" class="sr-only">Pilih Subtes UTBK</label>
+          <select id="pomo-subject-select" class="go-input">
+            <optgroup label="MATERI BERAT (Kuantitatif &amp; Logika)">
+              <option value="PK">PK — Pengetahuan Kuantitatif</option>
+              <option value="PM">PM — Penalaran Matematika</option>
+              <option value="PU">PU — Penalaran Umum</option>
+            </optgroup>
+            <optgroup label="MATERI RINGAN (Literasi &amp; Bahasa)">
+              <option value="LBE">LBE — Literasi Bahasa Inggris</option>
+              <option value="LBI">LBI — Literasi Bahasa Indonesia</option>
+              <option value="PPU">PPU — Pengetahuan &amp; Pemahaman Umum</option>
+              <option value="PBM">PBM — Pemahaman Bacaan &amp; Menulis</option>
+            </optgroup>
+          </select>
+          <span class="load-badge heavy" id="pomo-load-tag">MATERI BERAT</span>
+        </div>
+
+        <div class="rotator-banner" id="pomo-rotator-banner">
+          <div class="rotator-text" id="pomo-rotator-text">
+            Rotasi cerdas aktif: selang-seling materi Berat &amp; Ringan untuk cegah burnout.
+          </div>
+          <button type="button" class="btn-go-red hidden" id="btn-accept-rotation">Ganti Subtes</button>
+        </div>
+
+        <div class="pomo-clock-box">
+          <div class="pomo-digits" id="pomo-timer-display">25:00</div>
+          <div class="progress-track" style="margin: 12px 0 8px;">
+            <div class="pomo-progress-fill" id="pomo-progress-fill" style="width: 0%"></div>
+          </div>
+          <div class="pomo-pattern-row">
+            <span class="muted">Pola beban beruntun:</span>
+            <span class="pattern-dots" id="pomo-streak-dots">○ ○</span>
+            <span class="muted" id="pomo-cycle-note">(0/2)</span>
+          </div>
+        </div>
+
+        <div class="pomo-controls">
+          <button type="button" class="btn-primary" id="btn-pomo-start">Mulai Fokus</button>
+          <button type="button" class="btn-secondary" id="btn-pomo-reset">Reset</button>
+          <button type="button" class="btn-secondary" id="btn-pomo-skip">Lewati Fase</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         VIEW 5: CAROUSEL RUMUS CEPAT
+         =================================================================== -->
+    <section id="view-formulas" class="app-view">
+      <div class="subview-header">
+        <button type="button" class="btn-back" data-view="home">&larr; Home</button>
+        <h2>Carousel Rumus Cepat</h2>
+      </div>
+
+      <div class="go-card">
+        <div class="formula-top-controls">
+          <input type="search" id="formula-search" class="go-input" placeholder="Cari rumus (Vieta, Bola, Sin)...">
+        </div>
+
+        <div class="pill-bar" id="formula-cat-bar">
+          <button type="button" class="pill active" data-cat="all">Semua</button>
+          <button type="button" class="pill" data-cat="kuadrat">Kuadrat &amp; Linear</button>
+          <button type="button" class="pill" data-cat="geometri">Geometri 2D &amp; 3D</button>
+          <button type="button" class="pill" data-cat="deret">Barisan &amp; Deret</button>
+          <button type="button" class="pill" data-cat="trigonometri">Trigonometri</button>
+          <button type="button" class="pill" data-cat="pinned">Ditandai (<span id="pinned-count">0</span>)</button>
+        </div>
+
+        <div id="formula-carousel-stage">
+          <div class="carousel-topbar">
+            <span class="mono-meta" id="formula-counter">1 / 16</span>
+            <div class="carousel-nav-btns">
+              <button type="button" class="btn-secondary" id="btn-formula-prev">&larr; Prev</button>
+              <button type="button" class="btn-secondary" id="btn-formula-next">Next &rarr;</button>
+            </div>
+          </div>
+
+          <div class="formula-card" id="formula-card-container"></div>
+          <div class="formula-index-strip" id="formula-index-strip"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         VIEW 6: JADWAL & RENCANA BELAJAR (AUTO-SHIFT TIME-BLOCKING)
+         =================================================================== -->
+    <section id="view-schedule" class="app-view">
+      <div class="subview-header">
+        <button type="button" class="btn-back" data-view="home">&larr; Home</button>
+        <h2>Jadwal Belajar Otomatis</h2>
+      </div>
+
+      <div class="go-card sch-autoshift-banner">
+        <div class="card-head" style="margin-bottom: 10px;">
+          <div>
+            <span class="card-tag">AUTO-SHIFT TIME-BLOCKING</span>
+            <h3 class="card-title">Mode Belajar Terjadwal Otomatis</h3>
+            <p class="card-sub">Timer header menghitung mundur blok saat ini, lalu berbunyi chime lembut dan otomatis berpindah ke subtes atau pembahasan berikutnya.</p>
+          </div>
+          <button type="button" class="btn-go-red" id="btn-start-scheduled-mode">▶ Mulai Belajar Terjadwal</button>
+        </div>
+
+        <div class="sch-autoshift-opts">
+          <div class="form-field" style="margin-bottom:0; flex:1;">
+            <label for="sch-end-action">Saat Waktu Blok Habis:</label>
+            <select id="sch-end-action" class="go-input">
+              <option value="next">Otomatis Pindah ke Sesi Soal Subtes Berikutnya (Pembahasan di Blok Akhir)</option>
+              <option value="review">Langsung Buka Halaman Pembahasan Dulu</option>
+            </select>
+          </div>
+          <button type="button" class="btn-secondary" id="btn-sch-reset-default" style="align-self:flex-end;">Reset Preset Default</button>
+        </div>
+      </div>
+
+      <div class="go-card">
+        <div class="card-head">
+          <div>
+            <h3 class="card-title">Daftar Blok Jadwal Harian</h3>
+            <p class="card-sub" id="schedule-summary">0 / 7 blok selesai hari ini</p>
+          </div>
+        </div>
+
+        <form id="form-schedule-add" class="schedule-add-form">
+          <input type="hidden" id="sch-edit-id" value="">
+          <div class="sch-form-cell">
+            <label for="sch-start-time">Jam Mulai</label>
+            <input type="time" id="sch-start-time" class="go-input" value="07:00" required>
+          </div>
+          <div class="sch-form-cell">
+            <label for="sch-end-time">Jam Selesai</label>
+            <input type="time" id="sch-end-time" class="go-input" value="08:00" required>
+          </div>
+          <div class="sch-form-cell">
+            <label for="sch-subtes">Subtes UTBK</label>
+            <select id="sch-subtes" class="go-input">
+              <option value="PK">PK</option>
+              <option value="PPU">PPU</option>
+              <option value="PU">PU</option>
+              <option value="PBM">PBM</option>
+              <option value="LBI">LBI</option>
+              <option value="LBE">LBE</option>
+              <option value="PM">PM</option>
+            </select>
+          </div>
+          <div class="sch-form-cell">
+            <label for="sch-target-q">Target Soal</label>
+            <input type="number" id="sch-target-q" class="go-input" min="1" max="100" value="10" required>
+          </div>
+          <div class="sch-form-cell sch-cell-wide">
+            <label for="sch-title">Catatan Agenda (Opsional)</label>
+            <input type="text" id="sch-title" class="go-input" placeholder="Contoh: Paket Soal PK Pagi (kosongkan = otomatis)">
+          </div>
+          <div class="sch-form-btns">
+            <button type="submit" class="btn-primary" id="btn-sch-submit">+ Tambah Blok</button>
+            <button type="button" class="btn-secondary hidden" id="btn-sch-cancel-edit">Batal</button>
+          </div>
+        </form>
+
+        <div id="schedule-list" class="schedule-list"></div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         VIEW 7: ERROR LOG & EVALUASI SOAL SALAH
+         =================================================================== -->
+    <section id="view-errorlog" class="app-view">
+      <div class="subview-header">
+        <button type="button" class="btn-back" data-view="home">&larr; Home</button>
+        <h2>Error Log &amp; Evaluasi</h2>
+      </div>
+
+      <div class="go-card">
+        <div class="card-head">
+          <div>
+            <h3 class="card-title">Statistik Kesalahan</h3>
+            <p class="card-sub">Catat jebakan tryout/latihan agar tidak diulang</p>
+          </div>
+          <div class="header-btns">
+            <button type="button" class="btn-secondary" id="btn-start-review">Review Ulang (0)</button>
+            <button type="button" class="btn-primary" id="btn-toggle-error-form">+ Catat Soal Salah</button>
+          </div>
+        </div>
+
+        <div class="error-stats-grid">
+          <div class="kpi-pill">
+            <span class="muted">Total Tercatat</span>
+            <strong id="err-stat-total">0</strong>
+          </div>
+          <div class="kpi-pill">
+            <span class="muted">Belum Dikuasai</span>
+            <strong class="txt-amber" id="err-stat-pending">0</strong>
+          </div>
+          <div class="kpi-pill">
+            <span class="muted">Alasan Terbanyak</span>
+            <strong class="txt-red" id="err-stat-top-reason">-</strong>
+          </div>
+          <div class="kpi-pill">
+            <span class="muted">Subtes Rawan</span>
+            <strong class="txt-blue" id="err-stat-top-subtes">-</strong>
+          </div>
+        </div>
+      </div>
+
+      <form id="form-error-log" class="go-card error-form hidden">
+        <div class="card-head">
+          <span class="card-tag">TAMBAH CATATAN SOAL SALAH</span>
+          <button type="button" class="btn-chip" id="btn-close-error-form">Tutup</button>
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="err-subtes">Subtes UTBK</label>
+            <select id="err-subtes" class="go-input" required>
+              <option value="PK">PK — Pengetahuan Kuantitatif</option>
+              <option value="PM">PM — Penalaran Matematika</option>
+              <option value="PU">PU — Penalaran Umum</option>
+              <option value="PPU">PPU — Pengetahuan &amp; Pemahaman Umum</option>
+              <option value="PBM">PBM — Pemahaman Bacaan &amp; Menulis</option>
+              <option value="LBI">LBI — Literasi Bahasa Indonesia</option>
+              <option value="LBE">LBE — Literasi Bahasa Inggris</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="err-reason">Alasan Salah</label>
+            <select id="err-reason" class="go-input" required>
+              <option value="Kurang Teliti">Kurang Teliti</option>
+              <option value="Lupa Rumus">Lupa Rumus</option>
+              <option value="Kehabisan Waktu">Kehabisan Waktu</option>
+              <option value="Salah Konsep">Salah Konsep</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="err-source">Sumber / Tryout</label>
+            <input type="text" id="err-source" class="go-input" placeholder="Contoh: TO Mandiri #2">
+          </div>
+          <div class="form-field">
+            <label for="err-topic">Topik Soal</label>
+            <input type="text" id="err-topic" class="go-input" placeholder="Contoh: Fungsi Kuadrat" required>
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="err-question">Ringkasan Soal / Jebakan</label>
+          <textarea id="err-question" class="go-textarea" rows="2" placeholder="Tulis inti soal atau bagian yang mengecoh..." required></textarea>
+        </div>
+        <div class="form-field">
+          <label for="err-solution">Konsep &amp; Solusi Benar</label>
+          <textarea id="err-solution" class="go-textarea" rows="2" placeholder="Tulis rumus atau langkah cepat yang benar..." required></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Simpan ke Error Log</button>
+        </div>
+      </form>
+
+      <div class="filter-bar">
+        <select id="err-filter-subtes" class="go-select-sm">
+          <option value="ALL">Semua Subtes</option>
+          <option value="PK">PK</option>
+          <option value="PM">PM</option>
+          <option value="PU">PU</option>
+          <option value="PPU">PPU</option>
+          <option value="PBM">PBM</option>
+          <option value="LBI">LBI</option>
+          <option value="LBE">LBE</option>
+        </select>
+        <select id="err-filter-reason" class="go-select-sm">
+          <option value="ALL">Semua Alasan</option>
+          <option value="Kurang Teliti">Kurang Teliti</option>
+          <option value="Lupa Rumus">Lupa Rumus</option>
+          <option value="Kehabisan Waktu">Kehabisan Waktu</option>
+          <option value="Salah Konsep">Salah Konsep</option>
+        </select>
+        <select id="err-filter-status" class="go-select-sm">
+          <option value="ALL">Semua Status</option>
+          <option value="pending">Belum Dikuasai</option>
+          <option value="mastered">Sudah Paham</option>
+        </select>
+      </div>
+
+      <div id="error-list" class="error-list"></div>
+    </section>
+
+    <!-- ===================================================================
+         VIEW 8: LATIHAN SOAL SUBTES (MINI-QUIZ PACE UTBK)
+         =================================================================== -->
+    <section id="view-quiz" class="app-view">
+      <div class="subview-header">
+        <button type="button" class="btn-back" data-view="home">&larr; Home</button>
+        <h2>Latihan Soal Subtes (Pace UTBK)</h2>
+      </div>
+
+      <div id="quiz-setup" class="go-card">
+        <h3 class="card-title">Pilih Paket Latihan Cepat</h3>
+        <p class="card-sub">Hasil pengerjaan otomatis tercatat ke grafik mingguan, akurasi, dan total soal.</p>
+
+        <div class="form-grid" style="margin-top: 12px;">
+          <div class="form-field">
+            <label for="quiz-subtes-select">Pilih Subtes</label>
+            <select id="quiz-subtes-select" class="go-input">
+              <option value="ALL">Campuran Semua Subtes</option>
+              <option value="PK">PK — Pengetahuan Kuantitatif (75 dtk/soal)</option>
+              <option value="PM">PM — Penalaran Matematika (90 dtk/soal)</option>
+              <option value="PU">PU — Penalaran Umum (60 dtk/soal)</option>
+              <option value="LBE">LBE — Literasi Bahasa Inggris (90 dtk/soal)</option>
+              <option value="LBI">LBI — Literasi Bahasa Indonesia (75 dtk/soal)</option>
+              <option value="PPU">PPU — Pengetahuan &amp; Pemahaman Umum (45 dtk/soal)</option>
+              <option value="PBM">PBM — Pemahaman Bacaan &amp; Menulis (60 dtk/soal)</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="quiz-count-select">Jumlah Soal</label>
+            <select id="quiz-count-select" class="go-input">
+              <option value="5">5 Soal (Sprint Cepat)</option>
+              <option value="10">10 Soal (Latihan Standar)</option>
+              <option value="15">15 Soal (Paket Intensif)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="pace-info-box" id="quiz-pace-preview"></div>
+        <button type="button" class="btn-primary" id="btn-start-quiz">Mulai Latihan Sekarang</button>
+      </div>
+
+      <div id="quiz-active" class="go-card hidden">
+        <div class="quiz-top-meta">
+          <div class="quiz-badges">
+            <span class="card-tag" id="quiz-q-progress">SOAL 1 / 5</span>
+            <span class="load-badge heavy" id="quiz-q-subtes">PK</span>
+          </div>
+          <div class="pace-readout">
+            <span id="quiz-pace-timer">00:00 / 01:15</span>
+            <span class="pace-pill ok" id="quiz-pace-status">ON PACE</span>
+          </div>
+        </div>
+
+        <div class="pace-bar-track">
+          <div class="pace-bar-fill" id="quiz-pace-bar-fill" style="width: 0%"></div>
+        </div>
+
+        <!-- SPEECH BUBBLE "💡 TIPS LANGKAH PERTAMA" + GOSPEAK -->
+        <div class="first-step-bubble" id="quiz-first-step-bubble">
+          <div class="bubble-head">
+            <span class="bubble-badge">💡 Tips Langkah Pertama:</span>
+            <div class="gospeak-inline-tools">
+              <div class="gospeak-speed-group" role="group" aria-label="Kecepatan Suara GOSpeak">
+                <button type="button" class="btn-chip js-gospeak-rate" data-rate="1">1.0x</button>
+                <button type="button" class="btn-chip js-gospeak-rate" data-rate="1.25">1.25x</button>
+              </div>
+              <button type="button" class="btn-gospeak" id="btn-gospeak-tip" data-gospeak-key="tip" data-default-label="Dengarkan GOSpeak">
+                <span class="gospeak-icon" aria-hidden="true">🔊</span>
+                <span class="js-gospeak-btn-label">Dengarkan GOSpeak</span>
+              </button>
+            </div>
+          </div>
+          <p class="bubble-text" id="quiz-first-step-tip"></p>
+        </div>
+
+        <div class="quiz-question-bar">
+          <span class="card-tag">PERTANYAAN</span>
+          <button type="button" class="btn-gospeak btn-gospeak-sm" id="btn-gospeak-question" data-gospeak-key="question" data-default-label="Bacakan Soal">
+            <span class="gospeak-icon" aria-hidden="true">🔊</span>
+            <span class="js-gospeak-btn-label">Bacakan Soal</span>
+          </button>
+        </div>
+        <div class="quiz-question" id="quiz-question-text"></div>
+        <div class="quiz-options" id="quiz-options"></div>
+
+        <div class="quiz-footer">
+          <button type="button" class="btn-secondary" id="btn-quiz-quit">Akhiri</button>
+          <button type="button" class="btn-primary" id="btn-quiz-next" disabled>Jawab &amp; Lanjut &rarr;</button>
+        </div>
+      </div>
+
+      <div id="quiz-results" class="go-card hidden">
+        <div class="card-head">
+          <div>
+            <h3 class="card-title">Hasil Latihan &amp; Pembahasan</h3>
+            <p class="card-sub">Klik tombol GOSpeak di kotak pembahasan untuk mendengarkan tutor AI.</p>
+          </div>
+          <div class="header-btns" style="align-items: center;">
+            <div class="gospeak-speed-group" role="group" aria-label="Kecepatan Suara GOSpeak">
+              <button type="button" class="btn-chip js-gospeak-rate" data-rate="1">1.0x Normal</button>
+              <button type="button" class="btn-chip js-gospeak-rate" data-rate="1.25">1.25x Cepat</button>
+            </div>
+            <button type="button" class="btn-primary" id="btn-quiz-retry">Latihan Lagi</button>
+          </div>
+        </div>
+
+        <div id="quiz-scheduled-next-banner" class="rotator-banner hidden" style="margin-bottom: 12px;">
+          <div class="rotator-text" id="quiz-scheduled-banner-text"></div>
+          <button type="button" class="btn-go-red" id="btn-quiz-sched-next">Lanjut Blok Berikutnya &rarr;</button>
+        </div>
+
+        <div class="error-stats-grid" style="margin-bottom: 14px;">
+          <div class="kpi-pill">
+            <span class="muted">Skor Benar</span>
+            <strong id="res-score">0 / 0</strong>
+          </div>
+          <div class="kpi-pill">
+            <span class="muted">Akurasi</span>
+            <strong class="txt-green" id="res-accuracy">0%</strong>
+          </div>
+          <div class="kpi-pill">
+            <span class="muted">Rata-rata Pace</span>
+            <strong id="res-avg-pace">0 dtk</strong>
+          </div>
+          <div class="kpi-pill">
+            <span class="muted">Over-Pace</span>
+            <strong class="txt-amber" id="res-overpace">0 soal</strong>
+          </div>
+        </div>
+
+        <div id="quiz-review-list" class="quiz-review-list"></div>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         VIEW 9: HITUNG CEPAT (PAULI / KUANTITATIF 60 DETIK)
+         =================================================================== -->
+    <section id="view-speeddrill" class="app-view">
+      <div class="subview-header">
+        <button type="button" class="btn-back" data-view="home">&larr; Home</button>
+        <h2>Hitung Cepat (Pauli / Kuantitatif)</h2>
+      </div>
+
+      <div id="drill-setup" class="go-card">
+        <h3 class="card-title">Latih Refleks Hitung 60 Detik</h3>
+        <p class="card-sub">Bantu kurangi salah hitung ("Kurang Teliti") di subtes PK dan PM.</p>
+
+        <div class="form-field" style="margin-top: 12px;">
+          <label for="drill-mode-select">Pilih Mode Hitung Cepat</label>
+          <select id="drill-mode-select" class="go-input">
+            <option value="arith">Hitung Cepat Campuran (Satuan, Puluhan &amp; Ratusan)</option>
+            <option value="quant">Kuantitatif Kilat (Persen, Kuadrat, Aljabar Dasar)</option>
+            <option value="pauli">Pauli Klasik (Khusus Digit Satuan Penjumlahan)</option>
+          </select>
+        </div>
+
+        <div id="drill-last-result" class="pace-info-box hidden"></div>
+        <button type="button" class="btn-primary" id="btn-start-drill">Mulai Sprint 60 Detik</button>
+      </div>
+
+      <div id="drill-active" class="go-card hidden">
+        <div class="card-head">
+          <span class="badge-streak" id="drill-timer">60s</span>
+          <strong id="drill-score">Benar 0 / 0</strong>
+          <button type="button" class="btn-chip btn-danger-soft" id="btn-stop-drill">Selesai</button>
+        </div>
+
+        <div class="drill-stage">
+          <div class="drill-prompt" id="drill-prompt">6 + 8</div>
+          <div class="drill-answer-box" id="drill-input-display">_</div>
+          <div id="drill-feedback" class="drill-feedback hidden" aria-live="polite"></div>
+          <div class="muted" id="drill-hint"></div>
+        </div>
+
+        <div class="drill-keypad" id="drill-keypad">
+          <button type="button" class="key-btn" data-key="1">1</button>
+          <button type="button" class="key-btn" data-key="2">2</button>
+          <button type="button" class="key-btn" data-key="3">3</button>
+          <button type="button" class="key-btn" data-key="4">4</button>
+          <button type="button" class="key-btn" data-key="5">5</button>
+          <button type="button" class="key-btn" data-key="6">6</button>
+          <button type="button" class="key-btn" data-key="7">7</button>
+          <button type="button" class="key-btn" data-key="8">8</button>
+          <button type="button" class="key-btn" data-key="9">9</button>
+          <button type="button" class="key-btn key-muted" data-key="back">&larr;</button>
+          <button type="button" class="key-btn" data-key="0">0</button>
+          <button type="button" class="key-btn key-ok" id="drill-key-enter" data-key="enter">Submit</button>
+        </div>
+        <div style="text-align: center; margin-top: 10px;">
+          <button type="button" class="btn-secondary" id="btn-drill-submit-manual" style="width: 100%; max-width: 300px;">Submit Jawaban (Enter)</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- =====================================================================
+       F. BOTTOM NAVIGATION BAR (PUTIH + TOMBOL KUNING EMAS MELINGKAR TENGAH)
+       ===================================================================== -->
+  <nav class="bottom-nav" aria-label="Navigasi Utama">
+    <button type="button" class="bnav-btn active" data-nav="home" data-view="home">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      <span>Home</span>
+    </button>
+
+    <button type="button" class="bnav-btn" data-nav="latihan" data-view="latihan">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+      </svg>
+      <span>Latihan</span>
+    </button>
+
+    <button type="button" class="bnav-fab" id="btn-fab-center" aria-label="Mulai Cepat Pomodoro atau Latihan">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polygon points="6,4 20,12 6,20" fill="currentColor"/>
+      </svg>
+    </button>
+
+    <button type="button" class="bnav-btn" data-nav="stats" data-view="stats">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+      </svg>
+      <span>Statistik</span>
+    </button>
+
+    <button type="button" class="bnav-btn" data-view="formulas">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+      </svg>
+      <span>Rumus</span>
+    </button>
+  </nav>
+
+  <!-- MODAL: Center FAB Quick Action -->
+  <div id="fab-action-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="fab-modal-title">
+    <div class="modal-card compact-modal">
+      <div class="card-head">
+        <span class="card-tag" id="fab-modal-title">MULAI SESI CEPAT</span>
+        <button type="button" class="btn-chip" id="btn-close-fab">Tutup</button>
+      </div>
+      <div class="stack-form">
+        <button type="button" class="btn-primary" id="fab-go-pomodoro">Mulai Pomodoro 25/5</button>
+        <button type="button" class="btn-go-red" id="fab-go-quiz">Mulai Latihan Soal Subtes</button>
+        <button type="button" class="btn-secondary" id="fab-go-schedule">⚡ Jadwal Belajar Otomatis</button>
+        <button type="button" class="btn-secondary" id="fab-go-drill">Hitung Cepat (Smart Auto-Submit)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: + Catat Latihan Soal -->
+  <div id="practice-log-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="prac-modal-title">
+    <div class="modal-card compact-modal">
+      <div class="card-head">
+        <span class="card-tag" id="prac-modal-title">CATAT LATIHAN SOAL</span>
+        <button type="button" class="btn-chip" id="btn-close-practice">Tutup</button>
+      </div>
+      <form id="form-practice-log" class="stack-form">
+        <div class="form-field">
+          <label for="prac-subtes">Subtes UTBK</label>
+          <select id="prac-subtes" class="go-input" required>
+            <option value="PK">PK — Pengetahuan Kuantitatif</option>
+            <option value="PM">PM — Penalaran Matematika</option>
+            <option value="PU">PU — Penalaran Umum</option>
+            <option value="PPU">PPU — Pengetahuan &amp; Pemahaman Umum</option>
+            <option value="PBM">PBM — Pemahaman Bacaan &amp; Menulis</option>
+            <option value="LBI">LBI — Literasi Bahasa Indonesia</option>
+            <option value="LBE">LBE — Literasi Bahasa Inggris</option>
+          </select>
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="prac-total">Total Soal</label>
+            <input type="number" id="prac-total" class="go-input" min="1" max="500" value="20" required>
+          </div>
+          <div class="form-field">
+            <label for="prac-correct">Jumlah Benar</label>
+            <input type="number" id="prac-correct" class="go-input" min="0" max="500" value="15" required>
+          </div>
+          <div class="form-field">
+            <label for="prac-wrong">Jumlah Salah</label>
+            <input type="number" id="prac-wrong" class="go-input" min="0" max="500" value="5" required>
+          </div>
+          <div class="form-field">
+            <label for="prac-date">Tanggal</label>
+            <input type="date" id="prac-date" class="go-input" required>
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="prac-source">Sumber Latihan (Opsional)</label>
+          <input type="text" id="prac-source" class="go-input" placeholder="Contoh: TO SNBT #3 / Bank Soal PK">
+        </div>
+        <button type="submit" class="btn-go-red">Simpan Statistik Soal</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Manual Log Study Hours -->
+  <div id="manual-log-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="manual-modal-title">
+    <div class="modal-card compact-modal">
+      <div class="card-head">
+        <span class="card-tag" id="manual-modal-title">LOG JAM BELAJAR OFFLINE</span>
+        <button type="button" class="btn-chip" id="btn-close-manual">Tutup</button>
+      </div>
+      <form id="form-manual-log" class="stack-form">
+        <div class="form-field">
+          <label for="manual-subtes">Subtes yang Dipelajari</label>
+          <select id="manual-subtes" class="go-input">
+            <option value="PK">PK — Pengetahuan Kuantitatif (Berat)</option>
+            <option value="PM">PM — Penalaran Matematika (Berat)</option>
+            <option value="PU">PU — Penalaran Umum (Berat)</option>
+            <option value="LBE">LBE — Literasi Bahasa Inggris (Ringan)</option>
+            <option value="LBI">LBI — Literasi Bahasa Indonesia (Ringan)</option>
+            <option value="PPU">PPU — Pengetahuan &amp; Pemahaman Umum (Ringan)</option>
+            <option value="PBM">PBM — Pemahaman Bacaan &amp; Menulis (Ringan)</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="manual-minutes">Durasi (Menit)</label>
+          <input type="number" id="manual-minutes" class="go-input" min="5" max="480" value="25" required>
+          <div class="preset-row">
+            <button type="button" class="btn-chip manual-preset" data-mins="25">+25m</button>
+            <button type="button" class="btn-chip manual-preset" data-mins="50">+50m</button>
+            <button type="button" class="btn-chip manual-preset" data-mins="90">+90m</button>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary">Tambahkan ke Target Harian</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Review Error Log Flashcard -->
+  <div id="review-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="review-modal-title">
+    <div class="modal-card">
+      <div class="card-head">
+        <span class="card-tag" id="review-modal-title">REVIEW ERROR LOG</span>
+        <button type="button" class="btn-chip" id="btn-close-review">Tutup</button>
+      </div>
+      <div id="review-card-body"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: Settings & JSON Backup -->
+  <div id="settings-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="settings-modal-title">
+    <div class="modal-card">
+      <div class="card-head">
+        <span class="card-tag" id="settings-modal-title">PENGATURAN &amp; BACKUP DATA</span>
+        <button type="button" class="btn-chip" id="btn-close-settings">Tutup</button>
+      </div>
+      <form id="form-settings" class="stack-form">
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="set-user-name">Nama Profil</label>
+            <input type="text" id="set-user-name" class="go-input" required>
+          </div>
+          <div class="form-field">
+            <label for="set-target-date">Tanggal UTBK/SNBT 2027</label>
+            <input type="date" id="set-target-date" class="go-input" required>
+          </div>
+          <div class="form-field">
+            <label for="set-min-hours">Target Minimal (Jam/Hari)</label>
+            <input type="number" id="set-min-hours" class="go-input" min="1" max="14" step="0.5" required>
+          </div>
+          <div class="form-field">
+            <label for="set-max-hours">Target Maksimal (Jam/Hari)</label>
+            <input type="number" id="set-max-hours" class="go-input" min="2" max="16" step="0.5" required>
+          </div>
+          <div class="form-field">
+            <label for="set-focus-mins">Fokus Pomodoro (Menit)</label>
+            <input type="number" id="set-focus-mins" class="go-input" min="5" max="90" required>
+          </div>
+          <div class="form-field">
+            <label for="set-break-mins">Istirahat (Menit)</label>
+            <input type="number" id="set-break-mins" class="go-input" min="1" max="30" required>
+          </div>
+          <div class="form-field">
+            <label for="set-total-questions">Target Total Soal SNBT</label>
+            <input type="number" id="set-total-questions" class="go-input" min="100" max="100000" step="100" required>
+          </div>
+          <div class="form-field">
+            <label for="set-daily-questions">Target Soal Harian (Garis Kuning)</label>
+            <input type="number" id="set-daily-questions" class="go-input" min="10" max="500" step="5" required>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary">Simpan Pengaturan</button>
+      </form>
+
+      <hr class="go-divider">
+      <div>
+        <div class="card-tag">SINKRONISASI LAPTOP &harr; REALME C30</div>
+        <p class="muted" style="margin: 6px 0 10px;">Export data statistik, error log, dan jadwal belajar ke file <code>.json</code> untuk cadangan atau pindah perangkat.</p>
+        <div class="backup-actions">
+          <button type="button" class="btn-secondary" id="btn-export-data">Export File (.json)</button>
+          <button type="button" class="btn-secondary" id="btn-copy-backup">Salin Teks Backup</button>
+          <label class="btn-secondary file-label">
+            Import File (.json)
+            <input type="file" id="input-import-data" accept="application/json,.json" hidden>
+          </label>
+        </div>
+        <div class="form-field" style="margin-top: 10px;">
+          <label for="backup-json-text">Backup / Restore via Teks (Khusus APK Android &amp; Pindah Perangkat)</label>
+          <textarea id="backup-json-text" class="go-textarea" rows="3" placeholder="Tempel teks JSON backup di sini lalu klik Pulihkan dari Teks..."></textarea>
+          <button type="button" class="btn-chip active-gold" id="btn-restore-text-backup" style="align-self: flex-start; margin-top: 4px;">Pulihkan dari Teks JSON</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Transisi Auto-Shift Jadwal Belajar Otomatis -->
+  <div id="schedule-transition-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="sch-trans-title">
+    <div class="modal-card compact-modal" style="text-align: center;">
+      <div class="card-tag" style="margin-bottom: 6px;">🔔 CHIME TRANSISI JADWAL</div>
+      <h3 class="card-title" id="sch-trans-title" style="margin-bottom: 8px;">Waktu Blok Selesai!</h3>
+      <p class="muted" id="sch-trans-desc" style="margin: 0 0 10px;"></p>
+      <div class="pace-info-box" id="sch-trans-countdown" style="font-weight: 800;">Pindah otomatis dalam 3 detik...</div>
+      <div class="stack-form" style="margin-top: 12px;">
+        <button type="button" class="btn-go-red" id="btn-sch-trans-now">Lanjut Sekarang &rarr;</button>
+        <button type="button" class="btn-secondary" id="btn-sch-trans-stop">Hentikan Mode Terjadwal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING BAR: AI VOICE TUTOR "GOSPEAK" -->
+  <div id="gospeak-live-bar" class="gospeak-live-bar hidden" role="region" aria-label="Kontrol Suara GOSpeak">
+    <div class="gospeak-bar-left">
+      <div class="gospeak-wave" id="gospeak-wave" aria-hidden="true">
+        <span class="wave-bar"></span>
+        <span class="wave-bar"></span>
+        <span class="wave-bar"></span>
+        <span class="wave-bar"></span>
+      </div>
+      <div class="gospeak-bar-meta">
+        <span class="gospeak-lang-pill" id="gospeak-bar-lang">id-ID • 1.0x</span>
+        <span class="gospeak-bar-title" id="gospeak-bar-status">GOSpeak sedang membacakan...</span>
+      </div>
+    </div>
+    <div class="gospeak-bar-actions">
+      <button type="button" class="btn-chip js-gospeak-rate" data-rate="1">1.0x</button>
+      <button type="button" class="btn-chip js-gospeak-rate" data-rate="1.25">1.25x</button>
+      <button type="button" class="btn-chip active-gold" id="btn-gospeak-pause">⏸ Jeda</button>
+      <button type="button" class="btn-chip btn-danger-soft" id="btn-gospeak-stop">⏹ Stop</button>
+    </div>
+  </div>
+
+  <!-- Toast Feedback -->
+  <div id="hud-toast" class="hud-toast hidden" role="status" aria-live="polite"></div>
+
+  <script defer src="js/storage.js"></script>
+  <script defer src="js/data.js"></script>
+  <script defer src="js/gospeak.js"></script>
+  <script defer src="js/pomodoro.js"></script>
+  <script defer src="js/formulas.js"></script>
+  <script defer src="js/errorlog.js"></script>
+  <script defer src="js/quiz.js"></script>
+  <script defer src="js/speeddrill.js"></script>
+  <script defer src="js/schedule.js"></script>
+  <script defer src="js/app.js"></script>
+</body>
+</html>
