@@ -1,0 +1,5 @@
+node_modules/
+*.apk
+.DS_Store
+# www/ dan android/ HARUS di-commit agar GitHub Actions bisa build
+# Jangan ignore android/ atau www/

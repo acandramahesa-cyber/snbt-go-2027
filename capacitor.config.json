@@ -1,0 +1,9 @@
+{
+  "appId": "id.steir.snbtgo2027",
+  "appName": "SNBT GO 2027",
+  "webDir": "www",
+  "android": {
+    "backgroundColor": "#DC2626",
+    "allowMixedContent": false
+  }
+}
