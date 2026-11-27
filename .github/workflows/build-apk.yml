@@ -66,10 +66,8 @@ jobs:
           tag_name: latest
           name: "SNBT GO 2027 - Versi Terbaru"
           body: |
-            Aplikasi pendukung belajar SNBT 2027 (ringan & offline-ready).
-            Klik file **SNBT-GO-2027-RealmeC30.apk** di bawah ini untuk langsung mengunduh.
+            Aplikasi pendamping belajar UTBK/SNBT 2027 (ringan & 100% offline).
+            Ketuk file **SNBT-GO-2027-RealmeC30.apk** di bawah ini untuk mengunduh.
           files: SNBT-GO-2027-RealmeC30.apk
           overwrite_files: true
           make_latest: 'true'
-EOFEOF
-
